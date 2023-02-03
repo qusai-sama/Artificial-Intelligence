@@ -1,0 +1,72 @@
+import heapq
+
+def heuristic(a, b):
+    # calculate the manhattan distance between two points
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def a_star(start, goal, grid):
+    # set of discovered but unvisited nodes
+    heap = [(0, start)]
+    # set of visited nodes
+    visited = set()
+    # mapping of node to its parent
+    parent = {start: None}
+    # cost from start to each node
+    cost = {start: 0}
+
+    while heap:
+        # pop node with lowest f(n) = g(n) + h(n)
+        (f, current) = heapq.heappop(heap)
+        if current == goal:
+            # goal reached, reconstruct path and return it
+            path = []
+            while current != start:
+                path.append(current)
+                current = parent[current]
+            path.append(start)
+            path.reverse()
+            return path
+
+        visited.add(current)
+
+        # expand neighbors
+        for neighbor in get_neighbors(current, grid):
+            if neighbor in visited:
+                continue
+            g = cost[current] + 1
+            h = heuristic(neighbor, goal)
+            f = g + h
+            if neighbor not in cost or g < cost[neighbor]:
+                cost[neighbor] = g
+                heapq.heappush(heap, (f, neighbor))
+                parent[neighbor] = current
+
+    # no path found
+    return None
+
+def get_neighbors(node, grid):
+    # return neighbors of the node in the grid
+    x, y = node
+    neighbors = []
+    if x > 0 and grid[x-1][y] != "#":
+        neighbors.append((x-1, y))
+    if x < len(grid) - 1 and grid[x+1][y] != "#":
+        neighbors.append((x+1, y))
+    if y > 0 and grid[x][y-1] != "#":
+        neighbors.append((x, y-1))
+    if y < len(grid[0]) - 1 and grid[x][y+1] != "#":
+        neighbors.append((x, y+1))
+    return neighbors
+
+# example usage
+grid = [
+    [".", "#", ".", ".", "."],
+    [".", "#", "#", "#", "."],
+    [".", ".", ".", "#", "."],
+    [".", ".", ".", "#", "."],
+    [".", ".", ".", ".", "."]
+]
+start = (0, 0)
+goal = (4, 4)
+path = a_star(start, goal, grid)
+print(path)
