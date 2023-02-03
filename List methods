@@ -1,0 +1,21 @@
+numbers = [1, 2, 3, 4, 5]
+
+# Add a value to the list using insert method
+numbers.insert(0, 0)
+print(numbers) 
+
+# Append a value to the list using append method
+numbers.append(6)
+print(numbers)
+
+# Extend a list to another list using extend method
+numbers.extend([7, 8, 9])
+print(numbers) 
+
+# Delete a value from the list using remove method
+numbers.remove(0)
+print(numbers) 
+
+# Delete a value from the list using pop method
+numbers.pop(0)
+print(numbers)
